@@ -1,9 +1,9 @@
-control ansible_ssh_host=control.example.com 
+control ansible_ssh_host=control.'{{ domain }}'
 
 [control_node]
 localhost
 
 [control_node:vars]
 ansible_connection=local
-ansible_python_interpreter="{{ ansible_playbook_python }}"
+ansible_python_interpreter='{{ ansible_playbook_python }}'
 GUID="{{ lookup('env', 'GUID') }}"

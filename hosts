@@ -1,12 +1,12 @@
 [load_balancers]
-frontend1 ansible_ssh_host=frontend1.example.com
+frontend1 ansible_ssh_host=frontend1.'{{ domain }}'
 
 [app_servers]
-app1 ansible_ssh_host=app1.example.com
-app2 ansible_ssh_host=app2.example.com
+app1 ansible_ssh_host=app1.'{{ domain }}'
+app2 ansible_ssh_host=app2.'{{ domain }}'
 
 [database_servers]
-appdb1 ansible_ssh_host=appdb1.example.com
+appdb1 ansible_ssh_host=appdb1.'{{ domain }}'
 
 [internal:children]
 load_balancers

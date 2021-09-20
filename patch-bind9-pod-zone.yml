@@ -23,7 +23,7 @@
 
     - name: Create bind9-pod zone file
       ansible.builtin.template:
-        src: templates/example.com.zone.j2
+        src: templates/{{ domain }}.zone.j2
         dest: '{{ bind9_pod_zone_file }}'
         owner: root
         group: root
