@@ -16,7 +16,6 @@
 
     - name: Openstack instances
       ansible.builtin.os_server_info:
-        #cloud: '{{ GUID }}-project'
         region_name: "{{ openstack_region | default('regionOne') }}"
       delegate_to: localhost
       connection: local

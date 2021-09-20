@@ -1,6 +1,4 @@
-bind9_pod_service: bind9-pod.service
-bind9_pod_zone_file: /opt/podman/volumes/bind9-volume/var/named/{{ domain }}.zone
-
+---
 openstack_security_groups: []
 openstack_server_state: present
 openstack_cloud: "{{GUID}}-project"
