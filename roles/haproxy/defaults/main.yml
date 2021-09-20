@@ -1,0 +1,7 @@
+---
+# defaults file for roles/haproxy
+backend_listening_port: 8080
+haproxy_service: haproxy
+haproxy_config_path: /etc/haproxy
+haproxy_packages:
+  - haproxy

@@ -1,0 +1,7 @@
+---
+# handlers file for roles/postgresql
+
+- name: restart_postgresql
+  ansible.builtin.systemd:
+    name: '{{ postgresql_service }}'
+    state: restarted

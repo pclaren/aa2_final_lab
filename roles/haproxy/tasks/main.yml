@@ -1,0 +1,16 @@
+---
+# tasks file for roles/haproxy
+
+- name: Install haproxy packages
+  ansible.builtin.package:
+    name: '{{ haproxy_packages }}'
+
+- name: Configure haproxy
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: '{{ haproxy_config_path }}/haproxy.cfg'
+  notify: restart_haproxy
+
+- name: Enable and start haproxy
+  ansible.builtin.systemd:
+    name: '{{ haproxy_service }}'

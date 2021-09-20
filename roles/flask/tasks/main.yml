@@ -1,0 +1,72 @@
+---
+# tasks file for roles/flask
+
+- name: Install packages needed by flask 
+  ansible.builtin.package:
+    name: '{{ __package }}'
+    state: present
+  loop:
+    - '{{ flask_packages }}'
+  loop_control:
+    loop_var: __package
+
+- name: Create flask user
+  ansible.builtin.user:
+    name: '{{ flask_user }}'
+    state: present
+
+- name: Install flask repo
+  ansible.builtin.git:
+    repo: '{{ flask_repo }}'
+    dest: '{{ flask_home }}/{{ flask_app_name }}'
+    update: yes
+    force: yes
+
+- name: Change flask repo owner recursively
+  ansible.builtin.file:
+    dest: '{{ flask_home }}/{{ flask_app_name }}'
+    owner: '{{ flask_user }}'
+
+- name: Virtualenv setup
+  block:
+    - name: Setup pre-requisite pip3 packages inside venv
+      ansible.builtin.pip:
+        name: '{{ pip_dependencies }}'
+        state: latest
+        virtualenv: '{{ virtualenv_home }}/{{ flask_app_name }}'
+        virtualenv_site_packages: no
+
+    - name: 'Create virtualenv {{ virtualenv_name }} for Flask'
+      ansible.builtin.pip:
+        requirements: '{{ flask_home }}/{{ flask_app_name }}/requirements.txt'
+        virtualenv: '{{ virtualenv_home }}/{{ flask_app_name }}'
+        virtualenv_site_packages: no
+
+- name: Initialize flask app database resources
+  ansible.builtin.command:
+    argv:
+      - '{{ virtualenv_home }}/{{ flask_app_name }}/bin/python3'
+      - '{{ flask_home }}/{{ flask_app_name }}/config.py'
+  run_once: true
+
+- name: 'Generate {{ flask_app_name }} startup script'
+  ansible.builtin.template:
+    src: '{{ launch_template }}'
+    dest: '{{ flask_app_lauch_script }}'
+    mode: 0555
+
+- name: template systemd service config
+  block:
+    - name: template systemd service config
+      ansible.builtin.template:
+        src: flask_service.j2
+        dest: /etc/systemd/system/{{ flask_app_name }}.service
+        mode: 0755
+
+    # systemctl daemon must be reloaded
+    - name: start systemd app service
+      ansible.builtin.systemd:
+        daemon_reload: yes
+        name: '{{ flask_app_name }}'
+        enabled: yes
+        state: started

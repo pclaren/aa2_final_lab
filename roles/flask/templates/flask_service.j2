@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Launch flask app {{ flask_app_name }}
+After=network.target
+
+[Service]
+User={{ flask_user }}
+Group={{ flask_group }}
+WorkingDirectory={{ flask_home }}/{{ flask_app_name }}
+ExecStart={{ flask_app_lauch_script }}
+
+[Install]
+WantedBy=multi-user.target

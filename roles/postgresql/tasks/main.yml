@@ -1,0 +1,104 @@
+---
+# tasks file for roles/postgres
+
+# Be idempotent if run multiple times
+- name: Disable built-in PostgreSQL module
+  block:
+    - name: Get built-in PostgreSQL module status
+      ansible.builtin.command: dnf -q module list --disabled postgresql
+      register: dnf_module
+      # Don't fail if module is not found
+      failed_when:
+        - dnf_module.rc > 0
+        - '"No matching Modules to list" not in dnf_module.stderr'
+      changed_when: false
+
+    - name: Disable built-in PostgreSQL module
+      when: '"No matching Modules to list" in dnf_module.stderr'
+      ansible.builtin.command:
+        cmd: dnf -qy module disable postgresql
+
+- name: Install PostgreSQL GPG key, repository and packages
+  block:
+    - name: Import PostgreSQL RPM-GPG-KEY
+      ansible.builtin.command: rpm --import {{ postgresql_gpg_key }}
+
+#   - name: Install PostgreSQL repository
+#     ansible.builtin.dnf:
+#       name: '{{ __package }}'
+#       state: present
+#       # If not true, postgresql repo installation fails with:
+#       # 'Failed to validate GPG signature for pgdg-redhat-repo-42.0-19.noarch'
+#       #disable_gpg_check: true
+#     loop:
+#       - '{{ postgresql_repo }}'
+#     loop_control:
+#       loop_var: __package
+
+    - name: Install PostgreSQL
+      ansible.builtin.dnf:
+        name: '{{ __package }}'
+        state: present
+      loop:
+        - '{{ postgresql_repo }}'
+        - '{{ postgresql_packages }}'
+        - '{{ postgresql_python_library }}'
+      loop_control:
+        loop_var: __package
+
+- name: Check if PostgreSQL is initialized
+  ansible.builtin.stat:
+    path: '{{ postgresql_data_path }}/PG_VERSION'
+    get_checksum: false
+  register: pg_data_path
+
+- name: Initialize PostgreSQL
+  when: not pg_data_path.stat.exists
+  ansible.builtin.command:
+    cmd: '{{ postgresql_setup_cmd }} initdb'
+  notify: restart_postgresql
+
+- name: Setup PostgreSQL for remote password auth
+  ansible.builtin.template:
+    src: pg_hba.conf.j2
+    dest: '{{ postgresql_data_path }}/pg_hba.conf'
+    owner: '{{ postgresql_user }}'
+    group: '{{ postgresql_group }}'
+    mode: 0600
+  notify: restart_postgresql
+
+- name: Setup PostgreSQL to listen on network interfaces
+  ansible.builtin.lineinfile:
+    path: '{{ postgresql_config_path }}/postgresql.conf'
+    line: "listen_addresses = '*'"
+    insertafter: '#listen_addresses'
+  notify: restart_postgresql
+
+- name: Setup PostgreSQL as started and enabled on boot.
+  ansible.builtin.systemd:
+    name: '{{ postgresql_service }}'
+    state: started
+    enabled: true
+
+- name: Configure PostgreSQL resources, user, database etc
+  block:
+    - name: Setup PostgreSQL database(s)
+      ansible.builtin.postgresql_db:
+        name: '{{ __database.name }}'
+        state: "{{ __database.state | default('present') }}"
+      loop: '{{ postgresql_databases }}'
+      loop_control:
+        loop_var: __database
+
+    - name: Create PostgreSQL user(s)
+      ansible.builtin.postgresql_user:
+        name: '{{ __user.name }}'
+        password: '{{ __user.password | default(omit) }}'
+        priv: '{{ __user.priv | default(omit) }}'
+        db: '{{ __user.database | default(omit) }}'
+        state: '{{ __user.state | default(omit) }}'
+      loop: '{{ postgresql_users }}'
+      loop_control:
+        loop_var: __user
+  become: true
+  become_user: '{{ postgresql_user }}'
