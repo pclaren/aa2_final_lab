@@ -4,3 +4,6 @@
 
   roles:
     - haproxy
+    - role: firewall
+      firewall_services:
+        - http
