@@ -1,6 +1,12 @@
 ---
 - name: Building inventory
   hosts: control_node
+  vars:
+    meta_ansiblegroup:
+      - load_balancers
+      - app_servers
+      - database_servers
+
   tasks:
     - name: Fetch Instance Info
       ansible.builtin.os_server_info:
@@ -8,10 +14,10 @@
       register: r_instances
 
     - name: Add host(s) to inventory
-      when: "__instance.metadata.AnsibleGroup in ['load_balancers','app_servers','database_servers']"
+      when: '__instance.metadata.AnsibleGroup in meta_ansiblegroup'
       ansible.builtin.add_host:
         name: '{{ __instance.private_v4 }}'
-        group: 
+        group:
           - '{{ __instance.metadata.AnsibleGroup }}'
       loop: '{{ r_instances.openstack_servers }}'
       loop_control:
