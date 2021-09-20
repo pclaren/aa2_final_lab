@@ -23,18 +23,6 @@
     - name: Import PostgreSQL RPM-GPG-KEY
       ansible.builtin.command: rpm --import {{ postgresql_gpg_key }}
 
-#   - name: Install PostgreSQL repository
-#     ansible.builtin.dnf:
-#       name: '{{ __package }}'
-#       state: present
-#       # If not true, postgresql repo installation fails with:
-#       # 'Failed to validate GPG signature for pgdg-redhat-repo-42.0-19.noarch'
-#       #disable_gpg_check: true
-#     loop:
-#       - '{{ postgresql_repo }}'
-#     loop_control:
-#       loop_var: __package
-
     - name: Install PostgreSQL
       ansible.builtin.dnf:
         name: '{{ __package }}'
