@@ -1,6 +1,4 @@
 ---
-GUID: "{{ lookup('ENV','GUID') }}"
-
 domain: example.com
 satellite_server: satellite.{{ domain }}
 satellite_activationkey: gpte-labs-rhel8
