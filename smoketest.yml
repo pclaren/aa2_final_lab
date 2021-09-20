@@ -1,0 +1,15 @@
+---
+- hosts: app_servers
+  gather_facts: false
+  become: false
+
+  tasks:
+    - name: Check webserver for correct response
+      ansible.builtin.uri:
+        url: http://frontend1.{{ domain }}/ping
+        return_content: yes
+      until: '"alive" in result.content'
+      retries: 10
+      delay: 1
+      register: result
+      delegate_to: localhost
