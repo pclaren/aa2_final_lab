@@ -1,0 +1,7 @@
+---
+# defaults file for roles/satellite
+satellite_org_id: prod
+katello_package_name: katello-ca-consumer-latest.noarch.rpm
+
+# satellite_server must be set before using role
+katello_package_url: http://{{ satellite_server }}/pub/{{ katello_package_name }}
