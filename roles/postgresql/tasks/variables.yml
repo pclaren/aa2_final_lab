@@ -1,0 +1,5 @@
+---
+# Variable configuration
+
+- name: Include OS-specific variables (RedHat)
+  include_vars: 'RedHat-{{ ansible_distribution_major_version }}.yml'

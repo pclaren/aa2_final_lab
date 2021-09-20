@@ -1,38 +1,12 @@
 ---
 # tasks file for roles/postgres
 
-# Be idempotent if run multiple times
-- name: Disable built-in PostgreSQL module
-  block:
-    - name: Get built-in PostgreSQL module status
-      ansible.builtin.command: dnf -q module list --disabled postgresql
-      register: dnf_module
-      # Don't fail if module is not found
-      failed_when:
-        - dnf_module.rc > 0
-        - '"No matching Modules to list" not in dnf_module.stderr'
-      changed_when: false
+- name: Load variable configuration
+  include_tasks: variables.yml
 
-    - name: Disable built-in PostgreSQL module
-      when: '"No matching Modules to list" in dnf_module.stderr'
-      ansible.builtin.command:
-        cmd: dnf -qy module disable postgresql
-
-- name: Install PostgreSQL GPG key, repository and packages
-  block:
-    - name: Import PostgreSQL RPM-GPG-KEY
-      ansible.builtin.command: rpm --import {{ postgresql_gpg_key }}
-
-    - name: Install PostgreSQL
-      ansible.builtin.dnf:
-        name: '{{ __package }}'
-        state: present
-      loop:
-        - '{{ postgresql_repo }}'
-        - '{{ postgresql_packages }}'
-        - '{{ postgresql_python_library }}'
-      loop_control:
-        loop_var: __package
+- name: Load OS-specific tasks (RedHat)
+  when: ansible_distribution == 'RedHat'
+  include_tasks: install-RedHat-{{ ansible_distribution_major_version }}.yml
 
 - name: Check if PostgreSQL is initialized
   ansible.builtin.stat:
