@@ -1,0 +1,26 @@
+---
+- name: Building inventory
+  hosts: control_node
+  tasks:
+    - name: Fetch Instance Info
+      ansible.builtin.os_server_info:
+        region_name: "{{ openstack_region | default('regionOne') }}"
+      register: r_instances
+
+    - name: Add host(s) to inventory
+      when: "__instance.metadata.AnsibleGroup in ['load_balancers','app_servers','database_servers']"
+      ansible.builtin.add_host:
+        name: '{{ __instance.private_v4 }}'
+        group: 
+          - '{{ __instance.metadata.AnsibleGroup }}'
+      loop: '{{ r_instances.openstack_servers }}'
+      loop_control:
+        loop_var: __instance
+        label: '{{ __instance.private_v4 }} [{{ __instance.name }}]'
+
+- name: Test connectivity
+  hosts: load_balancers,app_servers,database_servers
+  gather_facts: false
+  tasks:
+    - name: test ping
+      ansible.builtin.ping:
