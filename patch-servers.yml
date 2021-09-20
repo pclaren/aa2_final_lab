@@ -1,0 +1,35 @@
+---
+- name: Handle DNS settings
+  hosts: control_node
+  gather_facts: false
+  become: false
+  collections:
+    - gpte.openstack
+
+  roles:
+    - openstack_manage_inmemory_inventory
+
+- name: Update DNS settings
+  hosts: load_balancers:app_servers:database_servers
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Get control node network settings
+      ansible.builtin.setup:
+        filter: ansible_default_ipv4
+      delegate_facts: true
+      delegate_to: control
+
+    - name: Set DNS using nmcli
+      ansible.builtin.command:
+        cmd: >-
+          nmcli connection modify "System eth0"
+          ipv4.ignore-auto-dns yes
+          ipv4.dns {{ hostvars.control.ansible_default_ipv4.address }}
+          ipv4.dns-search {{ domain }}
+
+    - name: Restart network manager
+      ansible.builtin.systemd:
+        name: NetworkManager
+        state: restarted
