@@ -1,0 +1,6 @@
+---
+- hosts: load_balancers
+  become: yes
+  
+  roles:
+    - haproxy
