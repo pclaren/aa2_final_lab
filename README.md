@@ -28,14 +28,16 @@ Deploy_Application_Stack workflow visualizer
 * Create job and workflow templates
 
 ### Tower static inventory setup
-Give the inventory a useful name: e.g.: **Control_Node**
+Give the inventory a useful name.
 
-Add `GUID: <your guid>` to inventory variables
+Add `GUID: <your guid>` to inventory variables. Replace <yuor guid> with your actual guid.
 
 Add a host named **control** with the following host variables:
 ```
 ansible_ssh_host: control.{{ domain }}
 ```
+> `domain` is set in group_vars/all.yml
+
 
 Add a group named **control_node**. Inside the group add a host named **localhost** with the following host variables:
 ```
@@ -44,9 +46,9 @@ ansible_python_interpreter: '{{ ansible_playbook_python }}'
 ```
 
 ### Tower dynamic inventory setup
-Give the inventory a useful name: e.g.: **OpenStack_inventory**
+Give the inventory a useful name.
 
-Setup an source of type OpenStack. It should use the OpenStack credentials that have been created.
+Setup an source of type OpenStack. It should use the OpenStack credentials that have been created. Ensure the source has OVERWTITE and UPDATE ON LAUNCH selected.
 
 Create three groups, where each also has a subgroup.
 
