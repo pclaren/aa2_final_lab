@@ -4,9 +4,10 @@
 - name: Load variable configuration
   include_tasks: variables.yml
 
+  # Setup/install tasks.
 - name: Load OS-specific tasks (RedHat)
   when: ansible_distribution == 'RedHat'
-  include_tasks: install-RedHat-{{ ansible_distribution_major_version }}.yml
+  include_tasks: setup-RedHat-{{ ansible_distribution_major_version }}.yml
 
 - name: Check if PostgreSQL is initialized
   ansible.builtin.stat:
@@ -62,5 +63,6 @@
       loop: '{{ postgresql_users }}'
       loop_control:
         loop_var: __user
+      no_log: true
   become: true
   become_user: '{{ postgresql_user }}'
