@@ -1,2 +1,4 @@
 ---
 # vars file for roles/postgresql
+
+postgresql_rpm_gpg_key: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG

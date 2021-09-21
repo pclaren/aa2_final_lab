@@ -21,7 +21,7 @@
 - name: Install PostgreSQL GPG key, repository and packages
   block:
     - name: Import PostgreSQL RPM-GPG-KEY
-      ansible.builtin.command: rpm --import {{ postgresql_gpg_key }}
+      ansible.builtin.command: rpm --import {{ postgresql_rpm_gpg_key }}
 
     - name: Install PostgreSQL
       ansible.builtin.dnf:
