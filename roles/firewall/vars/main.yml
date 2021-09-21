@@ -1,5 +1,8 @@
 ---
 # vars file for roles/firewall
 
+# systemd unit name
+firewall_service_name: firewalld
+
 firewall_packages:
   - firewalld

@@ -9,7 +9,7 @@
 
 - name: Ensure firewalld is started and enabled on boot
   ansible.builtin.systemd:
-    name: firewalld
+    name: '{{ firewall_service_name }}'
     enabled: yes
     state: started
 
