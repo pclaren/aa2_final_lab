@@ -3,9 +3,8 @@
   become: yes
 
   roles:
-    - postgresql
     - role: firewall
       vars:
         firewall_services:
           - postgresql
-
+    - postgresql
