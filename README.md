@@ -7,7 +7,7 @@ This lab introduces you to MitziCom who is adopting *Infrastructure as Code*. Yo
 Split monolithic playbook into smaller playbooks, and convert into roles for code reuse. Playbooks and roles should be self-documenting. Setup Ansible Tower.
 
 ## Results
-### Template screenshot
+### Templates screenshot
 ![Templates](.images/tower_templates.png)
 
 ### Workflow template visualizer screenshots
@@ -45,6 +45,8 @@ ansible_python_interpreter: '{{ ansible_playbook_python }}'
 
 ### Tower dynamic inventory setup
 Give the inventory a useful name: e.g.: **OpenStack_inventory**
+
+Setup an source of type OpenStack. It should use the OpenStack credentials that have been created.
 
 Create three groups, where each also has a subgroup.
 
