@@ -1,16 +1,19 @@
 ---
 # tasks file for roles/haproxy
 
-- name: Install haproxy packages
+- name: Install HAProxy packages
   ansible.builtin.package:
     name: '{{ haproxy_packages }}'
 
-- name: Configure haproxy
+- name: Copy HAProxy configuration in place
   ansible.builtin.template:
     src: haproxy.cfg.j2
     dest: '{{ haproxy_config_path }}/haproxy.cfg'
+    mode: 0644
+    validate: haproxy -f %s -c -q
   notify: restart_haproxy
 
-- name: Enable and start haproxy
+- name: Enable and start HAProxy
   ansible.builtin.systemd:
-    name: '{{ haproxy_service }}'
+    name: '{{ haproxy_service_name }}'
+

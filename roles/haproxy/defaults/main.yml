@@ -1,7 +1,11 @@
 ---
 # defaults file for roles/haproxy
-backend_listening_port: 8080
-haproxy_service: haproxy
-haproxy_config_path: /etc/haproxy
-haproxy_packages:
-  - haproxy
+
+# List of backend servers
+haproxy_backend_servers: []
+# - name: app1
+#   address: 192.168.0.1:80
+# - name: app2
+#   address: 192.168.0.2:80
+
+

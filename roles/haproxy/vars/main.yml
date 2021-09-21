@@ -1,2 +1,10 @@
 ---
 # vars file for roles/haproxy
+
+# systemd unit name
+haproxy_service_name: haproxy
+
+haproxy_config_path: /etc/haproxy
+haproxy_packages:
+  - haproxy
+

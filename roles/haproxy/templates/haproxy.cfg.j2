@@ -21,12 +21,12 @@ defaults
 frontend hafrontend
     bind *:80
     mode http
-    default_backend app-servers
+    default_backend habackend
 
-backend app-servers
+backend habackend
     mode http
     balance roundrobin
     option forwardfor
-    {% for host in groups['app_servers'] -%}
-    server {{ host }} {{ host }}:{{ backend_listening_port }} cookie {{ host }} check
-    {% endfor %}
+{% for backend in haproxy_backend_servers %}
+    server {{ backend.name }} {{ backend.address }} cookie {{ backend.name }} check
+{% endfor %}

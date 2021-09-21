@@ -3,5 +3,6 @@
 
 - name: restart_haproxy
   ansible.builtin.systemd:
-    name: '{{ haproxy_service }}'
+    name: '{{ haproxy_service_name }}'
     state: restarted
+
