@@ -3,6 +3,9 @@
   hosts: control
   become: true
   gather_facts: false
+  vars:
+    bind9_pod_service: bind9-pod.service
+    bind9_pod_zone_file: /opt/podman/volumes/bind9-volume/var/named/{{ domain }}.zone
 
   handlers:
     - name: restart bind9-pod
@@ -11,9 +14,6 @@
         state: restarted
 
   tasks:
-    - name: Include vars for control_node
-      ansible.builtin.include_vars: group_vars/control_node.yml
-
     - name: Openstack instances
       ansible.builtin.os_server_info:
         region_name: "{{ openstack_region | default('regionOne') }}"
