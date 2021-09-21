@@ -18,14 +18,14 @@ Deploy_Application_Stack workflow visualizer
 ![Deploy_Application_Stack_workflow_visualizer](.images/tower_Deploy_Application_Stack_workflow_visualizer.png)
 
 ## Tower setup
-* Create project
-* Create credentials
-  * OpenStack credentials
-  * Machine credentials
-* Create inventories
-  * Static inventory for OpenStack and control
-  * Dyanmic inventory to fetch OSP instances
-* Create job and workflow templates
+1. Create project
+2. Create credentials
+   - OpenStack credentials
+   - Machine credentials
+3. Create inventories
+   - Static inventory for OpenStack and control
+   - Dyanmic inventory to fetch OSP instances
+4. Create job and workflow templates
 
 ### Tower static inventory setup
 Give the inventory a useful name.
@@ -48,7 +48,7 @@ ansible_python_interpreter: '{{ ansible_playbook_python }}'
 ### Tower dynamic inventory setup
 Give the inventory a useful name.
 
-Setup an source of type OpenStack. It should use the OpenStack credentials that have been created. Ensure the source has OVERWTITE and UPDATE ON LAUNCH selected.
+Setup an source of type OpenStack. It should use the OpenStack credentials that where created at . Ensure the source has OVERWTITE and UPDATE ON LAUNCH selected.
 
 Create three groups, where each also has a subgroup.
 
