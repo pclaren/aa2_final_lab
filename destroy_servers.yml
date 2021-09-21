@@ -1,5 +1,8 @@
 ---
 - hosts: control_node
+  gather_facts: false
+  become: false
+
   tasks:
   - name: Delete server instance
     os_server:
