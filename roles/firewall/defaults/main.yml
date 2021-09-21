@@ -1,2 +1,5 @@
 ---
 # defaults file for roles/firewall
+#
+firewall_packages:
+  - firewalld

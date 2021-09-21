@@ -1,11 +1,14 @@
 ---
 - name: Install Firewalld
   ansible.builtin.package:
-    name: firewalld
+    name: '{{ __package }}'
     state: latest
+  loop: '{{ firewall_packages }}'
+  loop_control:
+    loop_var: __package
 
-- name: Start firewalld
-  service:
+- name: Ensure firewalld is started and enabled on boot
+  ansible.builtin.systemd:
     name: firewalld
     enabled: yes
     state: started
