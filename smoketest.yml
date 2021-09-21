@@ -2,7 +2,7 @@
 - name: PostgreSQL and End-to-end smoke tests
   hosts: app_servers:database_servers
   gather_facts: false
-  become: true
+  become: yes
 
   tasks:
     - name: PostgreSQL ping database
@@ -17,7 +17,7 @@
 
 - name: End to end smoke tests
   hosts: app_servers
-  become: false
+  become: no
   gather_facts: false
 
   tasks:

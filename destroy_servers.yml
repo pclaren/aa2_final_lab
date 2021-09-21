@@ -2,7 +2,7 @@
 - name: Deprovision OSP instances
   hosts: control_node
   gather_facts: no
-  become: yes
+  become: no
 
   tasks:
   - name: Destroy OSP instance

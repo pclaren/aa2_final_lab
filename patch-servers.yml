@@ -2,7 +2,7 @@
 - name: Update misc settings on OSP instances
   hosts: control_node
   gather_facts: false
-  become: false
+  become: no
   collections:
     - gpte.openstack
 
@@ -12,7 +12,7 @@
 - name: Update DNS settings
   hosts: load_balancers:app_servers:database_servers
   gather_facts: false
-  become: true
+  become: yes
 
   handlers:
     - name: restart networkmanager
