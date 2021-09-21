@@ -1,17 +1,14 @@
 ---
 # tasks file for roles/satellite
-- name: Install katello-ca-consumer, register system and attach subscriptions
-  block:
-    - name: Install katello-ca-consumer package
-      ansible.builtin.dnf:
-        name: '{{ katello_package_url }}'
-        disable_gpg_check: true
-        state: latest
+- name: Install katello-ca-consumer package
+  ansible.builtin.dnf:
+    name: '{{ katello_package_url }}'
+    disable_gpg_check: true
+    state: latest
 
-    - name: Register system and attach subscriptions
-      ansible.builtin.redhat_subscription:
-        activationkey: '{{ satellite_activationkey }}'
-        org_id: '{{ satellite_org_id }}'
-        auto_attach: true
-        state: present
-  become: yes
+- name: Register system and attach subscriptions
+  ansible.builtin.redhat_subscription:
+    activationkey: '{{ satellite_activationkey }}'
+    org_id: '{{ satellite_org_id }}'
+    auto_attach: true
+    state: present
