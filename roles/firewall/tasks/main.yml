@@ -1,5 +1,5 @@
 ---
-- name: Install Firewalld
+- name: Install firewall packages
   ansible.builtin.package:
     name: '{{ __package }}'
     state: latest
@@ -7,7 +7,7 @@
   loop_control:
     loop_var: __package
 
-- name: Ensure firewalld is started and enabled on boot
+- name: Ensure firewall is started and enabled on boot
   ansible.builtin.systemd:
     name: '{{ firewall_service_name }}'
     enabled: yes
@@ -16,32 +16,32 @@
 - name: Open service port
   when: firewall_services is defined
   ansible.builtin.firewalld:
-    service: "{{ __service }}"
+    service: '{{ __service }}'
+    immediate: yes
+    permanent: yes
     state: enabled
-    immediate: true
-    permanent: true
-  loop: "{{ firewall_services }}"
+  loop: '{{ firewall_services }}'
   loop_control:
     loop_var: __service
 
 - name: Open tcp port
   when: firewall_tcp_ports is defined
   ansible.builtin.firewalld:
-    port: "{{ __tcp_port }}/tcp"
-    permanent: yes
+    port: '{{ __tcp_port }}/tcp'
     immediate: yes
+    permanent: yes
     state: enabled
-  loop: "{{ firewall_tcp_ports }}"
+  loop: '{{ firewall_tcp_ports }}'
   loop_control:
     loop_var: __tcp_port
 
 - name: Open tcp port
   when: firewall_udp_ports is defined
   ansible.builtin.firewalld:
-    port: "{{ __udp_port }}/udp"
-    permanent: yes
+    port: '{{ __udp_port }}/udp'
     immediate: yes
+    permanent: yes
     state: enabled
-  loop: "{{ firewall_udp_ports }}"
+  loop: '{{ firewall_udp_ports }}'
   loop_control:
     loop_var: __udp_port
