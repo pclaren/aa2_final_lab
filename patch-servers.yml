@@ -1,5 +1,5 @@
 ---
-- name: Handle DNS settings
+- name: Update misc settings on OSP instances
   hosts: control_node
   gather_facts: false
   become: false
@@ -13,6 +13,12 @@
   hosts: load_balancers:app_servers:database_servers
   gather_facts: false
   become: true
+
+  handlers:
+    - name: restart networkmanager
+      ansible.builtin.systemd:
+        name: NetworkManager
+        state: restarted
 
   tasks:
     - name: Get control node network settings
@@ -28,8 +34,4 @@
           ipv4.ignore-auto-dns yes
           ipv4.dns {{ hostvars.control.ansible_default_ipv4.address }}
           ipv4.dns-search {{ domain }}
-
-    - name: Restart network manager
-      ansible.builtin.systemd:
-        name: NetworkManager
-        state: restarted
+      notify: restart networkmanager

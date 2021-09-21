@@ -1,5 +1,6 @@
 ---
-- hosts: app_servers
+- name: Setup and configure app_servers
+  hosts: app_servers
   become: yes
 
   roles:

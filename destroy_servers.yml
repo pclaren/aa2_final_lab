@@ -1,10 +1,11 @@
 ---
-- hosts: control_node
-  gather_facts: false
-  become: false
+- name: Deprovision OSP instances
+  hosts: control_node
+  gather_facts: no
+  become: yes
 
   tasks:
-  - name: Delete server instance
+  - name: Destroy OSP instance
     os_server:
         name: '{{ __openstack_server.instance_name }}'
         state: absent

@@ -1,5 +1,6 @@
 ---
-- hosts: database_servers
+- name: Setup and configure database_servers
+  hosts: database_servers
   become: yes
 
   roles:

@@ -28,5 +28,5 @@
   hosts: load_balancers,app_servers,database_servers
   gather_facts: false
   tasks:
-    - name: test ping
+    - name: Ping OSP instance
       ansible.builtin.ping:

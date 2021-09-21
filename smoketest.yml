@@ -1,11 +1,11 @@
 ---
-- name: End to end smoke tests
+- name: PostgreSQL and End-to-end smoke tests
   hosts: app_servers:database_servers
   gather_facts: false
   become: true
 
   tasks:
-    - name: Smoketest Postgres database
+    - name: PostgreSQL ping database
       postgresql_ping:
         db: flask_db
         login_host: '{{ groups.database_servers[0] }}'
