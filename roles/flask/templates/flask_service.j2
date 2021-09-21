@@ -8,7 +8,7 @@ After=network.target
 User={{ flask_user }}
 Group={{ flask_group }}
 WorkingDirectory={{ flask_home }}/{{ flask_app_name }}
-ExecStart={{ flask_app_lauch_script }}
+ExecStart={{ flask_app_lauch_path }}/launch_{{ flask_app_name }}
 
 [Install]
 WantedBy=multi-user.target

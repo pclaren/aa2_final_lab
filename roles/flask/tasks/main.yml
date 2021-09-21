@@ -1,7 +1,7 @@
 ---
 # tasks file for roles/flask
 
-- name: Install packages needed by flask
+- name: Install Flask packages
   ansible.builtin.package:
     name: '{{ __package }}'
     state: present
@@ -10,22 +10,24 @@
   loop_control:
     loop_var: __package
 
-- name: Create flask user
+- name: Create Flask user
   ansible.builtin.user:
     name: '{{ flask_user }}'
     state: present
 
-- name: Install flask repo
-  ansible.builtin.git:
-    repo: '{{ flask_repo }}'
-    dest: '{{ flask_home }}/{{ flask_app_name }}'
-    update: yes
-    force: yes
+- name: Setup Flask repo
+  block:
+    - name: Clone Flask repo
+      ansible.builtin.git:
+        repo: '{{ flask_repo }}'
+        dest: '{{ flask_home }}/{{ flask_app_name }}'
+        update: yes
+        force: yes
 
-- name: Change flask repo owner recursively
-  ansible.builtin.file:
-    dest: '{{ flask_home }}/{{ flask_app_name }}'
-    owner: '{{ flask_user }}'
+    - name: Change Flask repo owner recursively
+      ansible.builtin.file:
+        dest: '{{ flask_home }}/{{ flask_app_name }}'
+        owner: '{{ flask_user }}'
 
 - name: Virtualenv setup
   block:
@@ -42,29 +44,28 @@
         virtualenv: '{{ virtualenv_home }}/{{ flask_app_name }}'
         virtualenv_site_packages: no
 
-- name: Initialize flask app database resources
+- name: Initialize Flask app database resources
   ansible.builtin.command:
     argv:
       - '{{ virtualenv_home }}/{{ flask_app_name }}/bin/python3'
       - '{{ flask_home }}/{{ flask_app_name }}/config.py'
   run_once: true
 
-- name: 'Generate {{ flask_app_name }} startup script'
-  ansible.builtin.template:
-    src: '{{ launch_template }}'
-    dest: '{{ flask_app_lauch_script }}'
-    mode: 0555
-
-- name: template systemd service config
+- name: systemd unit file
   block:
-    - name: template systemd service config
+    - name: 'Copy {{ flask_app_name }} launch script in place'
+      ansible.builtin.template:
+        src: launch_{{ flask_app_name }}.j2
+        dest: '{{ flask_app_lauch_path }}/launch_{{ flask_app_name }}'
+        mode: 0555
+
+    - name: 'Copy {{ flask_app_name }} systemd unit file in place'
       ansible.builtin.template:
         src: flask_service.j2
         dest: /etc/systemd/system/{{ flask_app_name }}.service
         mode: 0755
 
-    # systemctl daemon must be reloaded
-    - name: start systemd app service
+    - name: 'Ensure {{ flask_app_name }} is started and enabled on boot'
       ansible.builtin.systemd:
         daemon_reload: yes
         name: '{{ flask_app_name }}'

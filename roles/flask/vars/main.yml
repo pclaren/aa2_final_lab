@@ -1,2 +1,16 @@
 ---
 # vars file for roles/flask
+
+# Defaults for RedHat-8
+flask_packages:
+  - autoconf
+  - automake
+  - git
+  - gcc
+  - libtool
+  - python36
+  - python3-virtualenv
+  - python3-psycopg2
+
+pip_dependencies:
+  - pip

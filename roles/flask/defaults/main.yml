@@ -4,21 +4,6 @@ flask_user: flask
 flask_group: flask
 flask_home: /opt
 flask_scm_ref: main
+flask_app_lauch_path: /usr/local/bin
 virtualenv_name: venv-{{ flask_app_name }}
 virtualenv_home: /opt/virtual_envs
-flask_app_lauch_script: /usr/local/bin/launch_{{ flask_app_name }}
-launch_template: launch_{{ flask_app_name }}.j2
-
-# Defaults for RedHat-8
-flask_packages:
-  - autoconf
-  - automake
-  - git
-  - gcc
-  - libtool
-  - python36
-  - python3-virtualenv
-  - python3-psycopg2
-
-pip_dependencies:
-  - pip
