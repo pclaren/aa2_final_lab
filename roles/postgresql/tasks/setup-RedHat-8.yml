@@ -23,7 +23,7 @@
     - name: Import PostgreSQL RPM-GPG-KEY
       ansible.builtin.command: rpm --import {{ postgresql_rpm_gpg_key }}
 
-    - name: Install PostgreSQL
+    - name: Install PostgreSQL packages
       ansible.builtin.dnf:
         name: '{{ __package }}'
         state: present

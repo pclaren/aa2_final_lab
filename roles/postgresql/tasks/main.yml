@@ -12,7 +12,7 @@
 - name: Check if PostgreSQL is initialized
   ansible.builtin.stat:
     path: '{{ postgresql_data_path }}/PG_VERSION'
-    get_checksum: false
+    get_checksum: no
   register: pg_data_path
 
 - name: Initialize PostgreSQL
@@ -37,15 +37,15 @@
     insertafter: '#listen_addresses'
   notify: restart_postgresql
 
-- name: Setup PostgreSQL as started and enabled on boot.
+- name: Ensure PostgreSQL is started and enabled on boot.
   ansible.builtin.systemd:
     name: '{{ postgresql_service }}'
     state: started
-    enabled: true
+    enabled: yes
 
-- name: Configure PostgreSQL resources, user, database etc
+- name: Configure PostgreSQL resources, users, databases etc
   block:
-    - name: Setup PostgreSQL database(s)
+    - name: Create PostgreSQL database(s)
       ansible.builtin.postgresql_db:
         name: '{{ __database.name }}'
         state: "{{ __database.state | default('present') }}"
@@ -64,5 +64,5 @@
       loop_control:
         loop_var: __user
       no_log: true
-  become: true
+  become: yes
   become_user: '{{ postgresql_user }}'
