@@ -4,8 +4,9 @@
 
   roles:
     - role: firewall
-      firewall_services:
-        - http
+      vars:
+        firewall_services:
+          - http
     - role:  haproxy
       vars:
         haproxy_backend_servers:
