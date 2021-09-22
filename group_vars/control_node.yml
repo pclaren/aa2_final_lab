@@ -3,17 +3,6 @@ openstack_security_groups: []
 openstack_server_state: present
 openstack_cloud: "{{GUID}}-project"
 
-openstack_serverss:
-  - instance_name: appdb1
-    AnsibleGroup: database_servers
-    deployment: prod
-    security_group_name: "{{GUID}}-HostSG"
-    image: "{{ _server_image | default('rhel-8.3') }}"
-    openstack_cloud: "{{GUID}}-project"
-    flavor: GLOBAL-CPU_4_Memory_8192_Disk_30_flavor
-    key_name: "{{GUID}}-keypair"
-    network: "{{GUID}}-dev-network"
-
 openstack_servers:
   - instance_name: app1
     AnsibleGroup: app_servers
