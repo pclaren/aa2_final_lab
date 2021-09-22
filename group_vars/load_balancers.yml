@@ -1,6 +1,0 @@
----
-haproxy_backend_servers:
-  - name: app1
-    address: app1.example.com:8080
-  - name: app2
-    address: app2.example.com:8080
