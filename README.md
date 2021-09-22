@@ -57,3 +57,24 @@ Group name | Subgroup name
 app_servers | meta-AnsibleGroup_app_servers
 database_servers | meta-AnsibleGroup_database_servers
 load_balancers | meta-AnsibleGroup_load_balancers
+
+## Playbook descriptions
+### OSP instance related
+Playbook | Description
+-------- | -----------
+provision-servers.yml | Create OSP instances. Use openstack_servers in group_vars/control_node.yml
+test_connectivity.yml | Ping test using instance ip addresses.
+patch-servers.yml | Setup instances DNS settings
+destroy_servers.yml | Delete OSP instances. Use openstack_servers in group_vars/control_node.yml
+patch-bind9-pod-zone.yml | Update bind9-pod's zone file on control node
+cleanup-servers.yml | Runs destroy_servers.yml and patch-bind9-pod-zone.yml
+
+
+### Application stack related
+Playbook | Description
+-------- | -----------
+add_subscription.yml | Register with satellite and auto attach subscription(s)
+app_servers.yml | Setup applicaiton servers
+database_servers.yml | Setup PostgreSQL server
+load_balancers.yml | Setup HAProxy server
+smoketest.yml | Perform postgres ping test and end-to-end test
